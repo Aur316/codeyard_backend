@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
+
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+
+  node-api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/mydatabase
+    depends_on:
+      - mongodb
+      - nats
